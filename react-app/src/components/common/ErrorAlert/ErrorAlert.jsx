@@ -1,35 +1,33 @@
+import React, { useState } from "react";
 import PropTypes from "prop-types";
-import React, { Component } from "react";
 import styles from "./ErrorAlert.module.css";
 import { HiX } from "react-icons/hi";
 
-export default class ErrorAlert extends Component {
-  static propTypes = { errors: PropTypes.string.isRequired };
+const ErrorAlert = ({ errors }) => {
+  const [isClosed, setIsClosed] = useState(false);
 
-  state = {
-    isClosed: false,
+  if (errors.length === 0 || isClosed) {
+    return null;
+  }
+
+  const handleClose = () => {
+    setIsClosed(true);
   };
 
-  render() {
-    const { errors } = this.props;
-    const { isClosed } = this.state;
+  return (
+    <section className={styles.alert}>
+      <div className={styles.content}>
+        <p>{errors}</p>
+        <span className={styles.close} onClick={handleClose}>
+          <HiX />
+        </span>
+      </div>
+    </section>
+  );
+};
 
-    if (errors.length === 0 || isClosed) {
-      return;
-    }
+ErrorAlert.propTypes = {
+  errors: PropTypes.string.isRequired,
+};
 
-    return (
-      <section className={styles.alert}>
-        <div className={styles.content}>
-          <p>{errors}</p>
-          <span
-            className={styles.close}
-            onClick={() => this.setState({ isClosed: true })}
-          >
-            <HiX />
-          </span>
-        </div>
-      </section>
-    );
-  }
-}
+export default ErrorAlert;

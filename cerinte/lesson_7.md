@@ -2,12 +2,11 @@
 
 ## React hooks part 1
 
-### Task №1 
+### Task №1
 
 Rewrite the entire state to hooks
 
-
-### Task №2 
+### Task №2
 
 Rewrite all life cycles to hooks
 

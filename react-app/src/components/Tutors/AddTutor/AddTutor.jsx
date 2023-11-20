@@ -3,6 +3,7 @@ import Button from "../../common/Button/Button";
 import PropTypes from "prop-types";
 
 export default class AddTutor extends Component {
+  //TODO In lectia 8.
   static propTypes = { onFormSubmit: PropTypes.func };
 
   state = {
