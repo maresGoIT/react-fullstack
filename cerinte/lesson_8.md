@@ -2,7 +2,7 @@
 
 ## React hooks part 2
 
-### Task №1 
+### Task №1
 
 Write your own toggle hook and use it to display forms
 
@@ -12,5 +12,4 @@ Show react-use library
 
 ### Task №3
 
-Write togle of all forms using useReducer
-
+Write toggle of all forms using useReducer

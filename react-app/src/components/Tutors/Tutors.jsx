@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "./Tutors.module.css";
 import Icon from "../common/Icon/Icon";
 import AddTutor from "./AddTutor/AddTutor";
@@ -7,15 +7,19 @@ import SearchBar from "../common/SearchBar/SearchBar";
 import tutorsService from "../../service/tutorsService";
 import Loading from "../common/Loading/Loading";
 import Error from "../common/Error/Error";
+import { ColorContext } from "../../App";
+import { useRef } from "react";
 
 const TUTORS_KEY = "tutors";
 
 export default function Tutors() {
+  const contextValue = useContext(ColorContext);
   const [searchTerm, setSearchTerm] = useState("");
   const [isAddFormVisible, setIsAddFormVisible] = useState(false);
   const [list, setList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const test = useRef(null);
 
   useEffect(() => {
     async function getTutors() {
@@ -35,8 +39,15 @@ export default function Tutors() {
     localStorage.setItem(TUTORS_KEY, JSON.stringify(list));
   }, [list]);
 
+  console.dir(test?.current);
+  // componentDidMount
+  useEffect(() => {
+    console.dir(test?.current.scrollWidth);
+  }, []);
+
   return (
-    <section className="section">
+    <section ref={test} className="section">
+      <code>Color: {contextValue}</code>
       <h2>
         <Icon variant="cat" label="Tutors" />
         <span>Tutors</span>
