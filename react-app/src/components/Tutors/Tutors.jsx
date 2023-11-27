@@ -7,7 +7,7 @@ import SearchBar from "../common/SearchBar/SearchBar";
 import tutorsService from "../../service/tutorsService";
 import Loading from "../common/Loading/Loading";
 import Error from "../common/Error/Error";
-import { ColorContext } from "../../App";
+import { ColorContext } from "../SharedLayout";
 import { useRef } from "react";
 
 const TUTORS_KEY = "tutors";

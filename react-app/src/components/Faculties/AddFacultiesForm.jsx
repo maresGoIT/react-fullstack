@@ -4,16 +4,26 @@ import PropTypes from "prop-types";
 
 const AddFacultiesForm = ({ onFormSubmit }) => {
   const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [history, setHistory] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onFormSubmit({ name });
+    onFormSubmit({ name, description, history });
   };
 
-  const handleChange = (evt) => {
-    const { value } = evt.target;
-    setName(value);
-  };
+  function handleChange(evt) {
+    const { name, value } = evt.target;
+    const action = {
+      name: setName,
+      description: setDescription,
+      history: setHistory,
+    };
+
+    // action["surname"] -> setSurname(value)
+
+    action[name](value);
+  }
 
   return (
     <form className="form" onSubmit={handleSubmit}>
@@ -29,7 +39,28 @@ const AddFacultiesForm = ({ onFormSubmit }) => {
           required
         />
       </label>
-
+      <label>
+        <span>Description</span>
+        <textarea
+          value={description}
+          name="description"
+          type="text"
+          placeholder="Description"
+          onChange={handleChange}
+          required
+        />
+      </label>
+      <label>
+        <span>History</span>
+        <textarea
+          value={history}
+          name="history"
+          type="text"
+          placeholder="History"
+          onChange={handleChange}
+          required
+        />
+      </label>
       <Button className={"mt-16"} type="submit">
         Add
       </Button>

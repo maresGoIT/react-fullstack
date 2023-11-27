@@ -16,5 +16,27 @@
       "name": "San Francisco"
     }
   ],
-  "faculties": []
+  "faculties": [
+    {
+      "id": 1,
+      "name": "Faculty of Math",
+      "description": "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sequi nisi enim atque optio quae accusantium fuga aliquam fugit voluptatem ad eaque facere, consequuntur temporibus odio pariatur dicta molestias ipsum? Laborum."
+    },
+    {
+      "id": 2,
+      "name": "Faculty of Physics",
+      "description": "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sequi nisi enim atque optio quae accusantium fuga aliquam fugit voluptatem ad eaque facere, consequuntur temporibus odio pariatur dicta molestias ipsum? Laborum."
+    },
+    {
+      "id": 3,
+      "name": "Faculty of Science",
+      "description": "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sequi nisi enim atque optio quae accusantium fuga aliquam fugit voluptatem ad eaque facere, consequuntur temporibus odio pariatur dicta molestias ipsum? Laborum."
+    },
+    {
+      "id": 4,
+      "name": "Faculty",
+      "description": "Faculty descr",
+      "history": "What a rich history"
+    }
+  ]
 }

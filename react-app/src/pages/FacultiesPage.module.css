@@ -1,0 +1,18 @@
+.list {
+  display: flex;
+  gap: 16px;
+  flex-direction: column;
+}
+
+.listItem {
+  padding: 8px;
+  position: relative;
+}
+
+.listItemDetailsLink {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 4px;
+  border: 1px solid red;
+}

@@ -1,84 +1,181 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./Faculties.module.css";
 import Icon from "../common/Icon/Icon";
 import Button from "../common/Button/Button";
-import AddFacultiesForm from "./AddFacultiesForm";
 import Dropdown from "../common/Dropdown/Dropdown";
 import Modal from "../common/Modal/Modal";
 import ErrorAlert from "../common/ErrorAlert";
 import AlternateButton from "../common/Button/AlternateButton";
-
-const FACULTIES_KEY = "faculties";
+import { createPortal } from "react-dom";
+import facultiesService from "../../service/facultiesService";
+import { FACULTIES_KEY } from "../../contants";
+import AddFacultiesForm from "./AddFacultiesForm";
 
 const Faculties = () => {
   const [isAddFormVisible, setIsAddFormVisible] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [errors, setErrors] = useState("");
-  const [selectedItem, setSelectedItem] = useState({ id: 0, name: "" });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [selectedItem, setSelectedItem] = useState({
+    id: 0,
+    name: "",
+  });
   const [list, setList] = useState([]);
 
   useEffect(() => {
-    const data = localStorage.getItem(FACULTIES_KEY);
+    async function getItems() {
+      const response = await facultiesService.get();
+      setList(response);
 
-    try {
-      if (data) {
-        setList(JSON.parse(data));
-      }
-    } catch (error) {
-      console.error(error);
+      return response;
     }
+
+    // Aici e logica de executie a functie de useEffect
+    setIsLoading(true);
+    getItems()
+      .catch((error) => {
+        console.error(error);
+        setError("A aparut o eroare la obtinerea listei de orase.");
+      })
+      .finally(setIsLoading(false));
   }, []);
 
   useEffect(() => {
     localStorage.setItem(FACULTIES_KEY, JSON.stringify(list));
   }, [list]);
 
-  const handleEditItem = (editedItem) => {
+  return (
+    <section className="section">
+      <h2>
+        <Icon variant="robot" label="Faculty" />
+        <span>Faculties</span>
+      </h2>
+      <div className={`${styles.itemsList}`}>{renderList(list)}</div>
+
+      {isLoading && "se incarca..."}
+      {isEditModalOpen &&
+        createPortal(
+          <Modal
+            isOpen={isEditModalOpen}
+            handleClose={() => {
+              setIsEditModalOpen(false);
+            }}
+            header={{
+              icon: <Icon variant={"pencil"} size={40} />,
+              label: "Edit faculty information",
+            }}
+          >
+            <form className={`form modal-form`}>
+              <label>
+                <span>Faculty</span>
+                <input
+                  type="text"
+                  required
+                  value={selectedItem.name}
+                  onChange={(e) =>
+                    setSelectedItem({
+                      ...selectedItem,
+                      name: e.target.value,
+                    })
+                  }
+                ></input>
+              </label>
+              <Button action={() => handleEditItem(selectedItem)}>SAVE</Button>
+            </form>
+          </Modal>,
+          document.body
+        )}
+      {isDeleteModalOpen && (
+        <Modal
+          isOpen={isDeleteModalOpen}
+          handleClose={() => {
+            setIsDeleteModalOpen(false);
+          }}
+          header={{
+            icon: <Icon variant={"handpointing"} size={40} />,
+            label: "Faculty Removal",
+          }}
+        >
+          <div>
+            All materials and information about the faculty will be deleted
+          </div>
+          <div className={styles.deleteModalControls}>
+            <AlternateButton action={() => setIsDeleteModalOpen(false)}>
+              No
+            </AlternateButton>
+            <Button action={() => handleDeleteItem(selectedItem)}>Yes</Button>
+          </div>
+        </Modal>
+      )}
+
+      {isAddFormVisible && <AddFacultiesForm onFormSubmit={handleAddItem} />}
+
+      {error.length > 0 && <ErrorAlert errors={error} />}
+
+      <div className={"mt-16"}>
+        <Button action={() => setIsAddFormVisible(true)}>Add Faculty</Button>
+      </div>
+    </section>
+  );
+
+  async function handleEditItem(editedItem) {
     const yourNextList = [...list];
 
     if (yourNextList.find((el) => el.name === editedItem.name)) {
-      setErrors("A faculty with the same name already exists.");
+      setError("A faculty with the same name already exists.");
+
       return;
     }
 
-    const faculty = yourNextList.find((el) => el.id === editedItem.id);
-    faculty.name = editedItem.name;
+    const item = yourNextList.find((el) => el.id === editedItem.id);
+    item.name = editedItem.name;
 
-    setErrors("");
-    setIsEditModalOpen(false);
-    setList(yourNextList);
-  };
+    try {
+      await facultiesService.update(editedItem.id, editedItem);
+      setError("");
+      setIsEditModalOpen(false);
+      setList(yourNextList);
+    } catch (error) {
+      setError("Nu a putut fi modificat orasul");
+    }
+  }
 
-  const handleDeleteItem = (item) => {
+  async function handleDeleteItem(item) {
     const yourNextList = list.filter((el) => el.id !== item.id);
 
-    setErrors("");
-    setIsDeleteModalOpen(false);
-    setList(yourNextList);
-  };
+    try {
+      await facultiesService.remove(item.id);
+      setError("");
+      setIsDeleteModalOpen(false);
+      setList(yourNextList);
+    } catch (error) {
+      setError(error.message);
+    }
+  }
 
-  const showEditModal = (data) => {
-    setSelectedItem({
-      id: data.id,
-      name: data.name,
-    });
+  function showEditModal(data) {
     setIsEditModalOpen(true);
-  };
-
-  const showDeleteModal = (data) => {
     setSelectedItem({
       id: data.id,
       name: data.name,
     });
-    setIsDeleteModalOpen(true);
-  };
+  }
 
-  const handleAddItem = (item) => {
+  function showDeleteModal(data) {
+    setIsDeleteModalOpen(true);
+    setSelectedItem({
+      id: data.id,
+      name: data.name,
+    });
+  }
+
+  async function handleAddItem(item) {
     const sortedList = list.sort((a, b) => a.id > b.id);
 
     if (sortedList.find((el) => el.name === item.name)) {
-      setErrors("A faculty with the same name already exists.");
+      setError("A faculty with the same name already exists.");
+
       return;
     }
 
@@ -87,15 +184,21 @@ const Faculties = () => {
 
     const itemToAdd = {
       id: newId,
-      name: item.name,
+      ...item,
     };
 
-    setErrors("");
-    setList([...list, itemToAdd]);
-    setIsAddFormVisible(false);
-  };
+    try {
+      await facultiesService.create(itemToAdd);
 
-  const renderList = (list) => {
+      setError("");
+      setList([...list, itemToAdd]);
+      setIsAddFormVisible(false);
+    } catch (error) {
+      setError("Nu a putut fi create orasul");
+    }
+  }
+
+  function renderList(list) {
     if (!list || list.length === 0) {
       return (
         <div className="box box--no-items">There are no faculties added.</div>
@@ -111,55 +214,7 @@ const Faculties = () => {
         />
       </div>
     ));
-  };
-
-  return (
-    <section className="section">
-      <h2>
-        <Icon variant="robot" label="Faculties" />
-        <span>Faculties</span>
-      </h2>
-      <div className={`${styles.itemsList}`}>{renderList(list)}</div>
-
-      {isEditModalOpen && (
-        <Modal
-          isOpen={isEditModalOpen}
-          handleClose={() => setIsEditModalOpen(false)}
-          header={{
-            icon: <Icon variant={"pencil"} size={40} />,
-            label: "Edit faculty information",
-          }}
-        >
-          <form className={`form modal-form`}>
-            <label>
-              <span>Faculty</span>
-              <input
-                type="text"
-                required
-                value={selectedItem.name}
-                onChange={(e) =>
-                  setSelectedItem({
-                    ...selectedItem,
-                    name: e.target.value,
-                  })
-                }
-              ></input>
-            </label>
-            <Button action={() => handleEditItem(selectedItem)}>SAVE</Button>
-          </form>
-        </Modal>
-      )}
-      {/* Render Delete Modal similarly */}
-
-      {isAddFormVisible && <AddFacultiesForm onFormSubmit={handleAddItem} />}
-
-      {errors.length > 0 && <ErrorAlert errors={errors} />}
-
-      <div className={"mt-16"}>
-        <Button action={() => setIsAddFormVisible(true)}>Add Faculty</Button>
-      </div>
-    </section>
-  );
+  }
 };
 
 export default Faculties;

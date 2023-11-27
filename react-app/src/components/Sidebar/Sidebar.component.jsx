@@ -1,5 +1,6 @@
 import { HiBookOpen, HiAcademicCap } from "react-icons/hi";
 import styles from "./Sidebar.module.css";
+import { NavLink } from "react-router-dom";
 
 const Sidebar = () => {
   const menuItems = [
@@ -7,11 +8,13 @@ const Sidebar = () => {
       id: "1",
       name: "University",
       icon: <HiAcademicCap />,
+      path: "/",
     },
     {
       id: "2",
       name: "Faculties",
       icon: <HiBookOpen />,
+      path: "/faculties",
     },
   ];
 
@@ -21,7 +24,15 @@ const Sidebar = () => {
       <ul>
         {menuItems.map((item) => (
           <li key={item.id}>
-            {item.icon} {item.name}
+            <NavLink
+              key={item.id}
+              to={item.path}
+              className={({ isActive }) =>
+                [styles.navLink, isActive ? styles.navLinkActive : ""].join(" ")
+              }
+            >
+              {item.icon} {item.name}
+            </NavLink>
           </li>
         ))}
       </ul>

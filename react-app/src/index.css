@@ -66,7 +66,8 @@ code {
   text-align: left;
 }
 
-.form input {
+.form input,
+.form textarea {
   padding: 8px 16px;
   max-width: 300px;
   border: 1px solid #424242;
@@ -102,4 +103,38 @@ h2 {
   letter-spacing: 1.25px;
   text-align: left;
   text-transform: uppercase;
+}
+
+.tabs {
+  background: #161d2a;
+  display: flex;
+  padding: 16px 12px;
+  gap: 16px;
+}
+
+.tabs a {
+  font-family: Montserrat;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 24px;
+  letter-spacing: 1.25px;
+  text-align: center;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #757575;
+}
+
+.tabs a:hover,
+.tabs a:focus {
+  text-decoration: underline;
+}
+
+.tabs a.active {
+  color: white;
+}
+
+.text-container {
+  margin: 16px 0;
+  background: white;
+  padding: 32px 16px;
 }
