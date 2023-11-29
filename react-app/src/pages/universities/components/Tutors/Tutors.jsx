@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import styles from "./Tutors.module.css";
-import Icon from "../common/Icon/Icon";
-import AddTutor from "./AddTutor/AddTutor";
-import Button from "../common/Button/Button";
-import SearchBar from "../common/SearchBar/SearchBar";
-import tutorsService from "../../service/tutorsService";
-import Loading from "../common/Loading/Loading";
-import Error from "../common/Error/Error";
-import { ColorContext } from "../SharedLayout";
+import Icon from "../../../common/components/Icon/Icon";
+import AddTutor from "./AddTutor";
+import Button from "../../../common/components/Button/Button";
+import SearchBar from "../../../common/components/SearchBar/SearchBar";
+import tutorsService from "../../../common/service/tutorsService";
+import Loading from "../../../common/components/Loading/Loading";
+import Error from "../../../common/components/Error/Error";
+import { ColorContext } from "../../../SharedLayout";
 import { useRef } from "react";
 
 const TUTORS_KEY = "tutors";

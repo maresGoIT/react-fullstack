@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Button from "../common/Button/Button";
 import PropTypes from "prop-types";
+import Button from "../../../common/components/Button/Button";
 
 const AddFacultiesForm = ({ onFormSubmit }) => {
   const [name, setName] = useState("");

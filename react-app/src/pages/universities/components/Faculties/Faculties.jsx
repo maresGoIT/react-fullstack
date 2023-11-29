@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from "react";
-import styles from "./Cities.module.css";
-import Icon from "../common/Icon/Icon";
-import Button from "../common/Button/Button";
-import AddCitiesForm from "./AddCitiesForm";
-import Dropdown from "../common/Dropdown/Dropdown";
-import Modal from "../common/Modal/Modal";
-import ErrorAlert from "../common/ErrorAlert";
-import AlternateButton from "../common/Button/AlternateButton";
-import citiesService from "../../service/citiesService";
 import { createPortal } from "react-dom";
 
-const CITIES_KEY = "cities";
+import facultiesService from "../../../common/service/facultiesService";
+import Modal from "../../../common/components/Modal/Modal";
+import Icon from "../../../common/components/Icon/Icon";
+import ErrorAlert from "../../../common/components/ErrorAlert";
+import Button from "../../../common/components/Button/Button";
+import AlternateButton from "../../../common/components/Button/AlternateButton";
+import Dropdown from "../../../common/components/Dropdown/Dropdown";
+import AddFacultiesForm from "./AddFacultiesForm";
 
-const Cities = () => {
+import styles from "./Faculties.module.css";
+
+export const FACULTIES_KEY = "faculties";
+
+const Faculties = () => {
   const [isAddFormVisible, setIsAddFormVisible] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -25,10 +27,8 @@ const Cities = () => {
   const [list, setList] = useState([]);
 
   useEffect(() => {
-    // Async folosit la nivelul functiei mari pentru useEffect duce la efecte nedorite,
-    // de aceea cream o functie separata in interiorul functiei de la useEffect
-    async function getCities() {
-      const response = await citiesService.get();
+    async function getItems() {
+      const response = await facultiesService.get();
       setList(response);
 
       return response;
@@ -36,7 +36,7 @@ const Cities = () => {
 
     // Aici e logica de executie a functie de useEffect
     setIsLoading(true);
-    getCities()
+    getItems()
       .catch((error) => {
         console.error(error);
         setError("A aparut o eroare la obtinerea listei de orase.");
@@ -45,14 +45,14 @@ const Cities = () => {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem(CITIES_KEY, JSON.stringify(list));
+    localStorage.setItem(FACULTIES_KEY, JSON.stringify(list));
   }, [list]);
 
   return (
     <section className="section">
       <h2>
-        <Icon variant="pin" label="Cities" />
-        <span>Cities</span>
+        <Icon variant="robot" label="Faculty" />
+        <span>Faculties</span>
       </h2>
       <div className={`${styles.itemsList}`}>{renderList(list)}</div>
 
@@ -66,12 +66,12 @@ const Cities = () => {
             }}
             header={{
               icon: <Icon variant={"pencil"} size={40} />,
-              label: "Edit city information",
+              label: "Edit faculty information",
             }}
           >
             <form className={`form modal-form`}>
               <label>
-                <span>City</span>
+                <span>Faculty</span>
                 <input
                   type="text"
                   required
@@ -97,11 +97,11 @@ const Cities = () => {
           }}
           header={{
             icon: <Icon variant={"handpointing"} size={40} />,
-            label: "City Removal",
+            label: "Faculty Removal",
           }}
         >
           <div>
-            All materials and information about the city will be deleted
+            All materials and information about the faculty will be deleted
           </div>
           <div className={styles.deleteModalControls}>
             <AlternateButton action={() => setIsDeleteModalOpen(false)}>
@@ -112,12 +112,12 @@ const Cities = () => {
         </Modal>
       )}
 
-      {isAddFormVisible && <AddCitiesForm onFormSubmit={handleAddItem} />}
+      {isAddFormVisible && <AddFacultiesForm onFormSubmit={handleAddItem} />}
 
       {error.length > 0 && <ErrorAlert errors={error} />}
 
       <div className={"mt-16"}>
-        <Button action={() => setIsAddFormVisible(true)}>Add City</Button>
+        <Button action={() => setIsAddFormVisible(true)}>Add Faculty</Button>
       </div>
     </section>
   );
@@ -126,7 +126,7 @@ const Cities = () => {
     const yourNextList = [...list];
 
     if (yourNextList.find((el) => el.name === editedItem.name)) {
-      setError("A city with the same name already exists.");
+      setError("A faculty with the same name already exists.");
 
       return;
     }
@@ -135,7 +135,7 @@ const Cities = () => {
     item.name = editedItem.name;
 
     try {
-      await citiesService.update(editedItem.id, editedItem);
+      await facultiesService.update(editedItem.id, editedItem);
       setError("");
       setIsEditModalOpen(false);
       setList(yourNextList);
@@ -148,7 +148,7 @@ const Cities = () => {
     const yourNextList = list.filter((el) => el.id !== item.id);
 
     try {
-      await citiesService.remove(item.id);
+      await facultiesService.remove(item.id);
       setError("");
       setIsDeleteModalOpen(false);
       setList(yourNextList);
@@ -177,7 +177,7 @@ const Cities = () => {
     const sortedList = list.sort((a, b) => a.id > b.id);
 
     if (sortedList.find((el) => el.name === item.name)) {
-      setError("A city with the same name already exists.");
+      setError("A faculty with the same name already exists.");
 
       return;
     }
@@ -187,11 +187,11 @@ const Cities = () => {
 
     const itemToAdd = {
       id: newId,
-      name: item.name,
+      ...item,
     };
 
     try {
-      await citiesService.create(itemToAdd);
+      await facultiesService.create(itemToAdd);
 
       setError("");
       setList([...list, itemToAdd]);
@@ -204,7 +204,7 @@ const Cities = () => {
   function renderList(list) {
     if (!list || list.length === 0) {
       return (
-        <div className="box box--no-items">There are no cities added.</div>
+        <div className="box box--no-items">There are no faculties added.</div>
       );
     }
 
@@ -220,6 +220,4 @@ const Cities = () => {
   }
 };
 
-Cities.propTypes = {};
-
-export default Cities;
+export default Faculties;

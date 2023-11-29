@@ -1,20 +1,34 @@
-import React from "react";
+import React, { lazy } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import "./App.css";
-import SharedLayout from "./components/SharedLayout";
-import HomePage from "./pages/HomePage";
-import FacultiesPage from "./pages/FacultiesPage";
+
+import SharedLayout from "./pages/SharedLayout";
+import UniversitiesPage from "./pages/universities/UniversitiesPage";
 import NotFoundPage from "./pages/NotFoundPage";
-import FacultyPage from "./pages/FacultyPage";
-import FacultyHistory from "./components/Faculties/FacultyHistory";
-import FacultyDescription from "./components/Faculties/FacultyDescription";
+
+import "./App.css";
+
+// Importurile cu lazy (dinamice), trebuie sa fie dupa cele normale
+
+const FacultiesPage = lazy(() => import("./pages/faculties/FacultiesPage"));
+const FacultyPage = lazy(() => import("./pages/faculties/faculty/FacultyPage"));
+const FacultyDescription = lazy(() =>
+  import("./pages/faculties/faculty/components/FacultyDescription")
+);
+const FacultyHistory = lazy(() =>
+  import("./pages/faculties/faculty/components/FacultyHistory")
+);
+
+// import FacultiesPage from "./pages/faculties/FacultiesPage";
+// import FacultyPage from "./pages/faculties/faculty/FacultyPage";
+// import FacultyDescription from "./pages/faculties/faculty/components/FacultyDescription";
+// import FacultyHistory from "./pages/faculties/faculty/components/FacultyHistory";
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<SharedLayout />}>
-          <Route index element={<HomePage />}></Route>
+          <Route index element={<UniversitiesPage />}></Route>
           <Route path="faculties" element={<FacultiesPage />} />
           <Route path="faculties/:id" element={<FacultyPage />}>
             <Route index element={<FacultyDescription />} />

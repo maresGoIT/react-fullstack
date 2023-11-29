@@ -1,8 +1,8 @@
-import robotHead from "../../../images/icons/robot-head.png";
-import cat from "../../../images/icons/cat.png";
-import pin from "../../../images/icons/pin.png";
-import pencil from "../../../images/icons/pencil.png";
-import handPointing from "../../../images/icons/hand-pointing.png";
+import robotHead from "../../../../images/icons/robot-head.png";
+import cat from "../../../../images/icons/cat.png";
+import pin from "../../../../images/icons/pin.png";
+import pencil from "../../../../images/icons/pencil.png";
+import handPointing from "../../../../images/icons/hand-pointing.png";
 
 import React from "react";
 

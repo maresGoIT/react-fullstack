@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { FacultyContext } from "../../pages/FacultyPage";
+import { FacultyContext } from "../FacultyPage";
 
 const FacultyDescription = () => {
   const faculty = useContext(FacultyContext);

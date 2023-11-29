@@ -1,6 +1,8 @@
-import React, { createContext, useState } from "react";
+import React, { Suspense, createContext, useState } from "react";
 import { Outlet } from "react-router-dom";
-import Sidebar from "./Sidebar/Sidebar.component.jsx";
+
+import Sidebar from "./common/components/Sidebar/Sidebar.component.jsx";
+import Loading from "./common/components/Loading/Loading.jsx";
 
 export const ColorContext = createContext("green");
 
@@ -12,7 +14,9 @@ const SharedLayout = () => {
       <main className="App">
         <Sidebar />
         <section className="container">
-          <Outlet />
+          <Suspense fallback={<Loading />}>
+            <Outlet />
+          </Suspense>
         </section>
       </main>
     </ColorContext.Provider>

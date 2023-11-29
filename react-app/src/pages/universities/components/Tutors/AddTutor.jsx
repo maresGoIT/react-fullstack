@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Button from "../../common/Button/Button";
+import Button from "../../../common/components/Button/Button";
 import PropTypes from "prop-types";
 
 const AddTutor = (props) => {

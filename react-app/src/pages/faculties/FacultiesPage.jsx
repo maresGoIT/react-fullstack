@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import styles from "./FacultiesPage.module.css";
-import facultiesService from "../service/facultiesService";
-import Error from "../components/common/Error/Error";
 import { Link } from "react-router-dom";
+
+import facultiesService from "../common/service/facultiesService";
+import Error from "../common/components/Error/Error";
+import styles from "./FacultiesPage.module.css";
 
 const FacultiesPage = () => {
   const [list, setList] = useState([]);

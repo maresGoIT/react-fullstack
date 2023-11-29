@@ -1,7 +1,7 @@
-import house from "../../images/School@2x 1.png";
-import styles from "./University.module.css";
+import house from "../../../../images/School@2x 1.png";
+import styles from "./UniversityDetails.module.css";
 
-const University = () => {
+const UniversityDetails = () => {
   const description = ` Experience, a concentration of knowledge and the ability to avoid most
     recruiting mistakes. We know what most local and foreign companies want
     and we can give it to you. And we are constantly improving our
@@ -24,4 +24,4 @@ const University = () => {
   );
 };
 
-export default University;
+export default UniversityDetails;
