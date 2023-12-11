@@ -77,6 +77,7 @@ export default function Tutors() {
           handleChange={(evt) => {
             setSearchTerm(evt.target.value);
           }}
+          placeholder="Search for tutor..."
           searchTerm={searchTerm}
         />
 

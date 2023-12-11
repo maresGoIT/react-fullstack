@@ -9,8 +9,15 @@ import Button from "../../../common/components/Button/Button";
 import AlternateButton from "../../../common/components/Button/AlternateButton";
 import Dropdown from "../../../common/components/Dropdown/Dropdown";
 import AddFacultiesForm from "./AddFacultiesForm";
+import SearchBar from "../../../common/components/SearchBar/SearchBar";
 
 import styles from "./Faculties.module.css";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setFacultiesSearchTerm,
+  addFaculty,
+  deleteFaculty,
+} from "../../../../redux/actions";
 
 export const FACULTIES_KEY = "faculties";
 
@@ -20,11 +27,15 @@ const Faculties = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const list = useSelector((state) => state.faculties.list);
+  const searchTerm = useSelector((state) => state.faculties.searchTerm);
+  const dispatch = useDispatch();
+
   const [selectedItem, setSelectedItem] = useState({
     id: 0,
     name: "",
   });
-  const [list, setList] = useState([]);
+  const [, setList] = useState([]);
 
   useEffect(() => {
     async function getItems() {
@@ -44,10 +55,6 @@ const Faculties = () => {
       .finally(setIsLoading(false));
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem(FACULTIES_KEY, JSON.stringify(list));
-  }, [list]);
-
   return (
     <section className="section">
       <h2>
@@ -55,6 +62,13 @@ const Faculties = () => {
         <span>Faculties</span>
       </h2>
       <div className={`${styles.itemsList}`}>{renderList(list)}</div>
+      <SearchBar
+        handleChange={(evt) => {
+          dispatch(setFacultiesSearchTerm(evt.target.value));
+        }}
+        placeholder="Search for faculties..."
+        searchTerm={searchTerm}
+      />
 
       {isLoading && "se incarca..."}
       {isEditModalOpen &&
@@ -145,13 +159,11 @@ const Faculties = () => {
   }
 
   async function handleDeleteItem(item) {
-    const yourNextList = list.filter((el) => el.id !== item.id);
-
     try {
-      await facultiesService.remove(item.id);
+      //await facultiesService.remove(item.id);
       setError("");
+      dispatch(deleteFaculty(item.id));
       setIsDeleteModalOpen(false);
-      setList(yourNextList);
     } catch (error) {
       setError(error.message);
     }
@@ -191,10 +203,11 @@ const Faculties = () => {
     };
 
     try {
-      await facultiesService.create(itemToAdd);
+      //await facultiesService.create(itemToAdd);
 
       setError("");
-      setList([...list, itemToAdd]);
+      //setList([...list, itemToAdd]);
+      dispatch(addFaculty(itemToAdd));
       setIsAddFormVisible(false);
     } catch (error) {
       setError("Nu a putut fi create orasul");
@@ -207,8 +220,12 @@ const Faculties = () => {
         <div className="box box--no-items">There are no faculties added.</div>
       );
     }
+    const filteredList =
+      searchTerm.length > 0
+        ? list.filter((el) => el.name.includes(searchTerm))
+        : list;
 
-    return list.map((item) => (
+    return filteredList.map((item) => (
       <div key={item.id} className={`box relative ${styles.listItem}`}>
         <span>{item.name}</span>
         <Dropdown
