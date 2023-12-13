@@ -12,6 +12,12 @@ import citiesService from "../../../common/service/citiesService";
 import AddCitiesForm from "./AddCitiesForm";
 
 import styles from "./Cities.module.css";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addCity,
+  deleteCity,
+  editCity,
+} from "../../../../redux/slices/citiesSlice";
 
 const CITIES_KEY = "cities";
 const Cities = () => {
@@ -19,36 +25,34 @@ const Cities = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
   const [error, setError] = useState("");
   const [selectedItem, setSelectedItem] = useState({
     id: 0,
     name: "",
   });
-  const [list, setList] = useState([]);
+  //const [list, setList] = useState([]);
+  const list = useSelector((state) => state.cities);
 
-  useEffect(() => {
-    // Async folosit la nivelul functiei mari pentru useEffect duce la efecte nedorite,
-    // de aceea cream o functie separata in interiorul functiei de la useEffect
-    async function getCities() {
-      const response = await citiesService.get();
-      setList(response);
+  // useEffect(() => {
+  //   // Async folosit la nivelul functiei mari pentru useEffect duce la efecte nedorite,
+  //   // de aceea cream o functie separata in interiorul functiei de la useEffect
+  //   async function getCities() {
+  //     const response = await citiesService.get();
+  //     setList(response);
 
-      return response;
-    }
+  //     return response;
+  //   }
 
-    // Aici e logica de executie a functie de useEffect
-    setIsLoading(true);
-    getCities()
-      .catch((error) => {
-        console.error(error);
-        setError("A aparut o eroare la obtinerea listei de orase.");
-      })
-      .finally(setIsLoading(false));
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem(CITIES_KEY, JSON.stringify(list));
-  }, [list]);
+  //   // Aici e logica de executie a functie de useEffect
+  //   setIsLoading(true);
+  //   getCities()
+  //     .catch((error) => {
+  //       console.error(error);
+  //       setError("A aparut o eroare la obtinerea listei de orase.");
+  //     })
+  //     .finally(setIsLoading(false));
+  // }, []);
 
   return (
     <section className="section">
@@ -124,36 +128,32 @@ const Cities = () => {
     </section>
   );
 
-  async function handleEditItem(editedItem) {
+  async function handleEditItem(item) {
     const yourNextList = [...list];
 
-    if (yourNextList.find((el) => el.name === editedItem.name)) {
+    if (yourNextList.find((el) => el.name === item.name)) {
       setError("A city with the same name already exists.");
 
       return;
     }
 
-    const item = yourNextList.find((el) => el.id === editedItem.id);
-    item.name = editedItem.name;
+    const editedItem = list.find((el) => el.id === selectedItem.id);
 
     try {
-      await citiesService.update(editedItem.id, editedItem);
+      dispatch(editCity(editedItem));
+      //await citiesService.update(editedItem.id, editedItem);
       setError("");
       setIsEditModalOpen(false);
-      setList(yourNextList);
     } catch (error) {
       setError("Nu a putut fi modificat orasul");
     }
   }
 
   async function handleDeleteItem(item) {
-    const yourNextList = list.filter((el) => el.id !== item.id);
-
     try {
-      await citiesService.remove(item.id);
       setError("");
+      dispatch(deleteCity(item.id));
       setIsDeleteModalOpen(false);
-      setList(yourNextList);
     } catch (error) {
       setError(error.message);
     }
@@ -176,27 +176,15 @@ const Cities = () => {
   }
 
   async function handleAddItem(item) {
-    const sortedList = list.sort((a, b) => a.id > b.id);
-
-    if (sortedList.find((el) => el.name === item.name)) {
+    if (list.find((el) => el.name === item.name)) {
       setError("A city with the same name already exists.");
 
       return;
     }
 
-    const newId =
-      sortedList.length > 0 ? sortedList[sortedList.length - 1].id + 1 : 0;
-
-    const itemToAdd = {
-      id: newId,
-      name: item.name,
-    };
-
     try {
-      await citiesService.create(itemToAdd);
-
+      dispatch(addCity(item));
       setError("");
-      setList([...list, itemToAdd]);
       setIsAddFormVisible(false);
     } catch (error) {
       setError("Nu a putut fi create orasul");

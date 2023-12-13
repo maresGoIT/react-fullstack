@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Button from "../../../common/components/Button/Button";
 import PropTypes from "prop-types";
 
 const AddTutor = (props) => {
   const { onFormSubmit } = props;
 
-  //TODO In lectia 8.
   const [surname, setSurname] = useState("");
   const [username, setUsername] = useState("");
   const [phone, setPhone] = useState("");
@@ -34,20 +33,8 @@ const AddTutor = (props) => {
       city: setCity,
     };
 
-    // action["surname"] -> setSurname(value)
-
     action[name](value);
   }
-
-  useEffect(() => {
-    // componentWillMount
-    console.log("AddTutor Form a fost montat");
-
-    // componentWillUnmount
-    return () => {
-      console.log("AddTutor Form va fi sters din DOM");
-    };
-  }, []);
 
   return (
     <form className="form" onSubmit={handleSubmit}>

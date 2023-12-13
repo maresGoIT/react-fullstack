@@ -1,31 +1,27 @@
-import { createStore, combineReducers } from "redux";
-import { devToolsEnhancer } from "@redux-devtools/extension";
-import { facultiesReducer } from "./reducers/facultiesReducer";
+import { configureStore } from "@reduxjs/toolkit";
+import { facultiesReducer } from "./slices/facultiesSlice";
+import { facultiesSearchTermReducer } from "./slices/facultiesSearchTermSlice";
+import { citiesReducer } from "./slices/citiesSlice";
+import { tutorsReducer } from "./slices/tutorsSlice";
 
-// Valoarea inițială a stării Redux pentru reducer-ul rădăcină
-// dacă nu este trecut parametrul preloadedState.
-
-export const rootReducer = combineReducers({
-  faculties: facultiesReducer,
+// In store, pentru fiecare "particica" din state-ul aplicatie, o sa asignam un reducer, care se va ocupa exclusiv de
+// logica pentru acea particica
+/*
+OBIECTUL DE STATE VA FI: 
+{
+  cities: [...lista de orase],
+  faculties: [...lista de facultati],
+  facultiesSearchTerm: "",
+  tutors: [...lista de tutori],
+}
+*/
+const store = configureStore({
+  reducer: {
+    cities: citiesReducer,
+    faculties: facultiesReducer,
+    facultiesSearchTerm: facultiesSearchTermReducer,
+    tutors: tutorsReducer,
+  },
 });
 
-// const rootReducer = (state = initialState, action) => {
-//   switch (action.type) {
-//     // În funcție de tipul acțiunii, se va executa o logică diferită.
-//     case "faculties/setSearchTerm":
-//       return {
-//         ...state,
-//         faculties: {
-//           ...state.faculties,
-//           searchTerm: action.payload,
-//         },
-//       };
-
-//     default:
-//       return state;
-//   }
-// };
-
-const enhancer = devToolsEnhancer();
-
-export const store = createStore(rootReducer, enhancer);
+export default store;

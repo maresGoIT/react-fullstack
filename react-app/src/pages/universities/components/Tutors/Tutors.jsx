@@ -9,6 +9,12 @@ import Loading from "../../../common/components/Loading/Loading";
 import Error from "../../../common/components/Error/Error";
 import { ColorContext } from "../../../SharedLayout";
 import { useRef } from "react";
+import {
+  addTutor,
+  deleteTutor,
+  editTutor,
+} from "../../../../redux/slices/tutorsSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const TUTORS_KEY = "tutors";
 
@@ -16,34 +22,25 @@ export default function Tutors() {
   const contextValue = useContext(ColorContext);
   const [searchTerm, setSearchTerm] = useState("");
   const [isAddFormVisible, setIsAddFormVisible] = useState(false);
-  const [list, setList] = useState([]);
+  const list = useSelector((state) => state.tutors);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const test = useRef(null);
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    async function getTutors() {
-      const response = await tutorsService.get();
-      setList(response);
-    }
+  // useEffect(() => {
+  //   async function getTutors() {
+  //     const response = await tutorsService.get();
+  //     setList(response);
+  //   }
 
-    setIsLoading(true);
-    getTutors()
-      .catch(() => {
-        setError("A aparut o eroare la obtinerea listei de tutori.");
-      })
-      .finally(() => setIsLoading(false));
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem(TUTORS_KEY, JSON.stringify(list));
-  }, [list]);
-
-  console.dir(test?.current);
-  // componentDidMount
-  useEffect(() => {
-    console.dir(test?.current.scrollWidth);
-  }, []);
+  //   setIsLoading(true);
+  //   getTutors()
+  //     .catch(() => {
+  //       setError("A aparut o eroare la obtinerea listei de tutori.");
+  //     })
+  //     .finally(() => setIsLoading(false));
+  // }, []);
 
   return (
     <section ref={test} className="section">
@@ -127,21 +124,16 @@ export default function Tutors() {
     });
   }
 
-  // handle add tutor
   function handleAddTutor(data) {
-    const newId = list.length > 0 ? list[list.length - 1].id : 0;
-
     const tutorToAdd = {
-      id: newId,
       firstName: data.name,
       lastName: data.surname,
       telephone: data.phone,
       email: data.email,
       city: data.city,
-      role: "Member",
     };
 
-    setList([...list, tutorToAdd]);
+    dispatch(addTutor(tutorToAdd));
     setIsAddFormVisible(false);
   }
 }

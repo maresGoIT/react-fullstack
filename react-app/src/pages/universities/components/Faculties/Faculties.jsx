@@ -14,10 +14,11 @@ import SearchBar from "../../../common/components/SearchBar/SearchBar";
 import styles from "./Faculties.module.css";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  setFacultiesSearchTerm,
   addFaculty,
   deleteFaculty,
-} from "../../../../redux/actions";
+  editFaculty,
+} from "../../../../redux/slices/facultiesSlice";
+import { setSearchTerm } from "../../../../redux/slices/facultiesSearchTermSlice";
 
 export const FACULTIES_KEY = "faculties";
 
@@ -27,8 +28,9 @@ const Faculties = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const list = useSelector((state) => state.faculties.list);
-  const searchTerm = useSelector((state) => state.faculties.searchTerm);
+
+  const list = useSelector((state) => state.faculties);
+  const searchTerm = useSelector((state) => state.facultiesSearchTerm);
   const dispatch = useDispatch();
 
   const [selectedItem, setSelectedItem] = useState({
@@ -64,7 +66,7 @@ const Faculties = () => {
       <div className={`${styles.itemsList}`}>{renderList(list)}</div>
       <SearchBar
         handleChange={(evt) => {
-          dispatch(setFacultiesSearchTerm(evt.target.value));
+          dispatch(setSearchTerm(evt.target.value));
         }}
         placeholder="Search for faculties..."
         searchTerm={searchTerm}
@@ -136,25 +138,26 @@ const Faculties = () => {
     </section>
   );
 
-  async function handleEditItem(editedItem) {
+  async function handleEditItem(selectedItem) {
     const yourNextList = [...list];
 
-    if (yourNextList.find((el) => el.name === editedItem.name)) {
+    if (yourNextList.find((el) => el.name === selectedItem.name)) {
       setError("A faculty with the same name already exists.");
 
       return;
     }
 
-    const item = yourNextList.find((el) => el.id === editedItem.id);
-    item.name = editedItem.name;
+    const editedItem = list.find((el) => el.id === selectedItem.id);
 
     try {
-      await facultiesService.update(editedItem.id, editedItem);
+      dispatch(editFaculty(editedItem));
+      //await facultiesService.update(editedItem.id, editedItem);
       setError("");
       setIsEditModalOpen(false);
       setList(yourNextList);
     } catch (error) {
-      setError("Nu a putut fi modificat orasul");
+      console.dir(error);
+      setError("Nu a putut fi modificata facultatea");
     }
   }
 
@@ -186,28 +189,15 @@ const Faculties = () => {
   }
 
   async function handleAddItem(item) {
-    const sortedList = list.sort((a, b) => a.id > b.id);
-
-    if (sortedList.find((el) => el.name === item.name)) {
+    if (list.find((el) => el.name === item.name)) {
       setError("A faculty with the same name already exists.");
 
       return;
     }
 
-    const newId =
-      sortedList.length > 0 ? sortedList[sortedList.length - 1].id + 1 : 0;
-
-    const itemToAdd = {
-      id: newId,
-      ...item,
-    };
-
     try {
-      //await facultiesService.create(itemToAdd);
-
       setError("");
-      //setList([...list, itemToAdd]);
-      dispatch(addFaculty(itemToAdd));
+      dispatch(addFaculty(item));
       setIsAddFormVisible(false);
     } catch (error) {
       setError("Nu a putut fi create orasul");
