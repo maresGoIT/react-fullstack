@@ -2,7 +2,7 @@
 import { css } from "@emotion/react";
 import PropTypes from "prop-types";
 
-function Button({ children, action, type = "button" }) {
+function Button({ children, action, type = "button", isDisabled }) {
   const color = "#ff6b0a";
   const hoverColor = "#b34d0b";
 
@@ -28,7 +28,7 @@ function Button({ children, action, type = "button" }) {
   `;
 
   return (
-    <button css={style} onClick={action} type={type}>
+    <button css={style} onClick={action} type={type} disabled={isDisabled}>
       {children}
     </button>
   );
@@ -38,6 +38,7 @@ Button.propTypes = {
   children: PropTypes.any,
   action: PropTypes.func,
   button: PropTypes.string,
+  isDisabled: PropTypes.bool,
 };
 
 export default Button;

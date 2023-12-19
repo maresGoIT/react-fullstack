@@ -8,8 +8,15 @@ async function get() {
   return response.data;
 }
 
+async function create(tutor) {
+  const response = await axios.post("/tutors", tutor);
+
+  return response.data;
+}
+
 const tutorsService = {
   get,
+  create,
 };
 
 export default tutorsService;

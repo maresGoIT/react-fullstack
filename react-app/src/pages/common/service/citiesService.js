@@ -20,8 +20,8 @@ async function remove(cityId) {
   return response.data;
 }
 
-async function update(cityId, city) {
-  const response = await axios.put(`/cities/${cityId}`, city);
+async function update(city) {
+  const response = await axios.put(`/cities/${city.id}`, city);
 
   return response.data;
 }

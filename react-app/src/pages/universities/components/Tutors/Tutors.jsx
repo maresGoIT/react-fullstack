@@ -4,43 +4,31 @@ import Icon from "../../../common/components/Icon/Icon";
 import AddTutor from "./AddTutor";
 import Button from "../../../common/components/Button/Button";
 import SearchBar from "../../../common/components/SearchBar/SearchBar";
-import tutorsService from "../../../common/service/tutorsService";
 import Loading from "../../../common/components/Loading/Loading";
 import Error from "../../../common/components/Error/Error";
 import { ColorContext } from "../../../SharedLayout";
 import { useRef } from "react";
-import {
-  addTutor,
-  deleteTutor,
-  editTutor,
-} from "../../../../redux/slices/tutorsSlice";
+import { fetchTutors, addTutor } from "../../../../redux/slices/tutorsSlice";
 import { useDispatch, useSelector } from "react-redux";
-
-const TUTORS_KEY = "tutors";
 
 export default function Tutors() {
   const contextValue = useContext(ColorContext);
   const [searchTerm, setSearchTerm] = useState("");
   const [isAddFormVisible, setIsAddFormVisible] = useState(false);
-  const list = useSelector((state) => state.tutors);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const list = useSelector((state) => state.tutors.items);
   const test = useRef(null);
   const dispatch = useDispatch();
+  const tutorsStatus = useSelector((state) => state.tutors.status);
+  const error = useSelector((state) => state.tutors.error);
+  const isLoading = tutorsStatus === "loading";
+  const [addRequestStatus, setAddRequestStatus] = useState("idle");
 
-  // useEffect(() => {
-  //   async function getTutors() {
-  //     const response = await tutorsService.get();
-  //     setList(response);
-  //   }
-
-  //   setIsLoading(true);
-  //   getTutors()
-  //     .catch(() => {
-  //       setError("A aparut o eroare la obtinerea listei de tutori.");
-  //     })
-  //     .finally(() => setIsLoading(false));
-  // }, []);
+  // GET
+  useEffect(() => {
+    if (tutorsStatus === "idle") {
+      dispatch(fetchTutors());
+    }
+  }, [tutorsStatus, dispatch]);
 
   return (
     <section ref={test} className="section">
@@ -67,7 +55,6 @@ export default function Tutors() {
         </div>
 
         {isAddFormVisible && <AddTutor onFormSubmit={handleAddTutor} />}
-
         {isLoading && <Loading />}
 
         <SearchBar
@@ -83,8 +70,9 @@ export default function Tutors() {
             action={() => {
               setIsAddFormVisible(true);
             }}
+            isDisabled={addRequestStatus === "pending"}
           >
-            Add Tutor
+            {addRequestStatus === "pending" ? "Adding tutor..." : "Add tutor"}
           </Button>
         </div>
       </>
@@ -124,16 +112,24 @@ export default function Tutors() {
     });
   }
 
-  function handleAddTutor(data) {
-    const tutorToAdd = {
-      firstName: data.name,
-      lastName: data.surname,
-      telephone: data.phone,
-      email: data.email,
-      city: data.city,
-    };
+  async function handleAddTutor(data) {
+    try {
+      setAddRequestStatus("pending");
 
-    dispatch(addTutor(tutorToAdd));
-    setIsAddFormVisible(false);
+      const tutorToAdd = {
+        firstName: data.name,
+        lastName: data.surname,
+        telephone: data.phone,
+        email: data.email,
+        city: data.city,
+      };
+
+      await dispatch(addTutor(tutorToAdd));
+    } catch (err) {
+      console.error("Failed to save the post: ", err);
+    } finally {
+      setIsAddFormVisible(false);
+      setAddRequestStatus("idle");
+    }
   }
 }

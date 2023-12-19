@@ -8,6 +8,23 @@
       "email": "john@smith.com",
       "city": "New York",
       "role": "Member"
+    },
+    {
+      "id": 1,
+      "firstName": "John",
+      "lastName": "Snow",
+      "telephone": "123456",
+      "email": "john@snow.com",
+      "city": "Washington",
+      "role": "Member"
+    },
+    {
+      "firstName": "Testescu",
+      "lastName": "Test",
+      "telephone": "123456",
+      "email": "test@test.com",
+      "city": "Test",
+      "id": 2
     }
   ],
   "cities": [

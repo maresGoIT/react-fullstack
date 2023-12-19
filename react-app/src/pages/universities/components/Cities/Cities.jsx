@@ -7,8 +7,6 @@ import Dropdown from "../../../common/components/Dropdown/Dropdown";
 import Modal from "../../../common/components/Modal/Modal";
 import ErrorAlert from "../../../common/components/ErrorAlert";
 import AlternateButton from "../../../common/components/Button/AlternateButton";
-import citiesService from "../../../common/service/citiesService";
-
 import AddCitiesForm from "./AddCitiesForm";
 
 import styles from "./Cities.module.css";
@@ -16,43 +14,32 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   addCity,
   deleteCity,
-  editCity,
+  updateCity,
+  fetchCities,
 } from "../../../../redux/slices/citiesSlice";
+import Loading from "../../../common/components/Loading/Loading";
 
-const CITIES_KEY = "cities";
 const Cities = () => {
   const [isAddFormVisible, setIsAddFormVisible] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const citiesStatus = useSelector((state) => state.cities.status);
+  const isLoading = citiesStatus === "loading";
+
   const dispatch = useDispatch();
-  const [error, setError] = useState("");
+  const error = useSelector((state) => state.cities.error);
   const [selectedItem, setSelectedItem] = useState({
     id: 0,
     name: "",
   });
-  //const [list, setList] = useState([]);
-  const list = useSelector((state) => state.cities);
 
-  // useEffect(() => {
-  //   // Async folosit la nivelul functiei mari pentru useEffect duce la efecte nedorite,
-  //   // de aceea cream o functie separata in interiorul functiei de la useEffect
-  //   async function getCities() {
-  //     const response = await citiesService.get();
-  //     setList(response);
+  const list = useSelector((state) => state.cities.items);
 
-  //     return response;
-  //   }
-
-  //   // Aici e logica de executie a functie de useEffect
-  //   setIsLoading(true);
-  //   getCities()
-  //     .catch((error) => {
-  //       console.error(error);
-  //       setError("A aparut o eroare la obtinerea listei de orase.");
-  //     })
-  //     .finally(setIsLoading(false));
-  // }, []);
+  useEffect(() => {
+    if (citiesStatus === "idle") {
+      dispatch(fetchCities());
+    }
+  }, [citiesStatus, dispatch]);
 
   return (
     <section className="section">
@@ -62,7 +49,7 @@ const Cities = () => {
       </h2>
       <div className={`${styles.itemsList}`}>{renderList(list)}</div>
 
-      {isLoading && "se incarca..."}
+      {isLoading && <Loading />}
       {isEditModalOpen &&
         createPortal(
           <Modal
@@ -106,6 +93,7 @@ const Cities = () => {
             label: "City Removal",
           }}
         >
+          <code>{selectedItem.id}</code>
           <div>
             All materials and information about the city will be deleted
           </div>
@@ -129,33 +117,34 @@ const Cities = () => {
   );
 
   async function handleEditItem(item) {
-    const yourNextList = [...list];
-
-    if (yourNextList.find((el) => el.name === item.name)) {
-      setError("A city with the same name already exists.");
-
-      return;
-    }
-
-    const editedItem = list.find((el) => el.id === selectedItem.id);
-
     try {
-      dispatch(editCity(editedItem));
-      //await citiesService.update(editedItem.id, editedItem);
-      setError("");
-      setIsEditModalOpen(false);
+      const yourNextList = [...list];
+
+      if (yourNextList.find((el) => el.name === item.name)) {
+        throw new Error("A city with the same name already exists.");
+      }
+
+      const editedItemId = list.find((el) => el.id === selectedItem.id)?.id;
+      const updatedItem = {
+        ...item,
+        id: editedItemId,
+      };
+
+      await dispatch(updateCity(updatedItem));
     } catch (error) {
-      setError("Nu a putut fi modificat orasul");
+      console.error(error.message);
+    } finally {
+      setIsEditModalOpen(false);
     }
   }
 
   async function handleDeleteItem(item) {
     try {
-      setError("");
-      dispatch(deleteCity(item.id));
-      setIsDeleteModalOpen(false);
+      await dispatch(deleteCity(item.id));
     } catch (error) {
-      setError(error.message);
+      console.error(error.message);
+    } finally {
+      setIsDeleteModalOpen(false);
     }
   }
 
@@ -177,17 +166,17 @@ const Cities = () => {
 
   async function handleAddItem(item) {
     if (list.find((el) => el.name === item.name)) {
-      setError("A city with the same name already exists.");
+      console.error("A city with the same name already exists.");
 
       return;
     }
 
     try {
-      dispatch(addCity(item));
-      setError("");
-      setIsAddFormVisible(false);
+      await dispatch(addCity(item));
     } catch (error) {
-      setError("Nu a putut fi create orasul");
+      console.error("Nu a putut fi create orasul");
+    } finally {
+      setIsAddFormVisible(false);
     }
   }
 

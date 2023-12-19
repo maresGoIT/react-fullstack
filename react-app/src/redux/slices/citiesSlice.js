@@ -1,52 +1,90 @@
-import { createSlice, nanoid } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import citiesService from "../../pages/common/service/citiesService";
 
 // Cum va arata state-ul initial
-const initialState = [
-  {
-    id: 2,
-    name: "San Francisco",
-  },
-];
+const initialState = {
+  status: "idle",
+  error: "",
+  items: [],
+};
 
-// pentru slice, ce avem la name, e ce sa avem in obiectul de state global, de ex, {cities: []}
+export const fetchCities = createAsyncThunk("cities/fetchCities", async () => {
+  return citiesService.get();
+});
+
+export const addCity = createAsyncThunk(
+  "cities/addCity",
+  // The payload creator receives the partial `{title, content, user}` object
+  async (initialPost) => {
+    return citiesService.create(initialPost);
+  }
+);
+
+export const deleteCity = createAsyncThunk(
+  "cities/deleteCity",
+  // The payload creator receives the partial `{title, content, user}` object
+  async (initialPost) => {
+    return citiesService.remove(initialPost);
+  }
+);
+
+export const updateCity = createAsyncThunk(
+  "cities/updateCity",
+  // The payload creator receives the partial `{title, content, user}` object
+  async (initialPost) => {
+    return citiesService.update(initialPost);
+  }
+);
+
 const citiesSlice = createSlice({
   name: "cities",
   initialState: initialState,
-  // Aici o sa adaugam toate functiile care modifica state-ul
-  reducers: {
-    addCity: {
-      reducer: (state, action) => {
-        state.push(action.payload);
-      },
-      prepare: (item) => {
-        return {
-          payload: {
-            id: nanoid(),
-            ...item,
-          },
-        };
-      },
-    },
-    editCity(state, action) {
-      return state.map((item) => {
-        if (item.id !== action.payload.id) {
-          // This isn't the item we care about - keep it as-is
-          return item;
-        }
+  reducers: {},
+  extraReducers: (builder) => {
+    // READ
+    builder
+      .addCase(fetchCities.pending, (state, _action) => {
+        state.status = "loading";
+      })
+      .addCase(fetchCities.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.items = action.payload;
+      })
+      .addCase(fetchCities.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      // CREATE
+      .addCase(addCity.fulfilled, (state, action) => {
+        state.items.push(action.payload);
+      })
+      .addCase(addCity.rejected, (state, action) => {
+        state.error = action.error.message;
+      })
+      // DELETE
+      .addCase(deleteCity.fulfilled, (state, action) => {
+        const index = state.items.findIndex((el) => el.id === action.payload);
 
-        // Otherwise, this is the one we want - return an updated value
-        return {
-          ...item,
-          ...action.payload,
-        };
+        state.items.splice(index, 1);
+      })
+      .addCase(deleteCity.rejected, (state, action) => {
+        state.error = action.error.message;
+      })
+      // UPDATE
+      .addCase(updateCity.fulfilled, (state, action) => {
+        const index = state.items.findIndex(
+          (el) => el.id === action.payload.id
+        );
+
+        if (index !== -1) {
+          state.items[index] = { ...action.payload };
+        }
+      })
+      .addCase(updateCity.rejected, (state, action) => {
+        state.error = action.error.message;
       });
-    },
-    deleteCity(state, action) {
-      return state.filter((el) => el.id !== action.payload);
-    },
   },
 });
 
 // Exportăm generatoarelor de acțiuni și reducer-ul
-export const { addCity, editCity, deleteCity } = citiesSlice.actions;
 export const citiesReducer = citiesSlice.reducer;
