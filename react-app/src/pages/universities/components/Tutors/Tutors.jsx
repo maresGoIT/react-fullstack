@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./Tutors.module.css";
 import Icon from "../../../common/components/Icon/Icon";
 import AddTutor from "./AddTutor";
@@ -6,20 +6,26 @@ import Button from "../../../common/components/Button/Button";
 import SearchBar from "../../../common/components/SearchBar/SearchBar";
 import Loading from "../../../common/components/Loading/Loading";
 import Error from "../../../common/components/Error/Error";
-import { ColorContext } from "../../../SharedLayout";
-import { useRef } from "react";
 import { fetchTutors, addTutor } from "../../../../redux/slices/tutorsSlice";
+import { setFilter } from "../../../../redux/slices/tutorsFilterSlice";
+
 import { useDispatch, useSelector } from "react-redux";
+import {
+  selectFilteredTutors,
+  selectTutorsError,
+  selectTutorsFilter,
+  selectTutorsStatus,
+} from "../../../../redux/selectors";
 
 export default function Tutors() {
-  const contextValue = useContext(ColorContext);
-  const [searchTerm, setSearchTerm] = useState("");
   const [isAddFormVisible, setIsAddFormVisible] = useState(false);
-  const list = useSelector((state) => state.tutors.items);
-  const test = useRef(null);
+
+  const filteredList = useSelector(selectFilteredTutors);
+  const searchTerm = useSelector(selectTutorsFilter);
+  const tutorsStatus = useSelector(selectTutorsStatus);
+  const error = useSelector(selectTutorsError);
   const dispatch = useDispatch();
-  const tutorsStatus = useSelector((state) => state.tutors.status);
-  const error = useSelector((state) => state.tutors.error);
+
   const isLoading = tutorsStatus === "loading";
   const [addRequestStatus, setAddRequestStatus] = useState("idle");
 
@@ -31,8 +37,7 @@ export default function Tutors() {
   }, [tutorsStatus, dispatch]);
 
   return (
-    <section ref={test} className="section">
-      <code>Color: {contextValue}</code>
+    <section className="section">
       <h2>
         <Icon variant="cat" label="Tutors" />
         <span>Tutors</span>
@@ -43,11 +48,6 @@ export default function Tutors() {
   );
 
   function renderTutors() {
-    const filteredList =
-      searchTerm.length > 0
-        ? list.filter((el) => el.firstName.includes(searchTerm))
-        : list;
-
     return (
       <>
         <div className={`box ${styles.tutorsList}`}>
@@ -59,7 +59,7 @@ export default function Tutors() {
 
         <SearchBar
           handleChange={(evt) => {
-            setSearchTerm(evt.target.value);
+            dispatch(setFilter(evt.target.value));
           }}
           placeholder="Search for tutor..."
           searchTerm={searchTerm}
