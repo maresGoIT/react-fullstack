@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import authService from "../common/service/authService";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../../redux/slices/authSlice";
+import { loginUser, registerUser } from "../../redux/slices/authSlice";
 import { selectUser } from "../../redux/selectors";
+import Error from "../common/components/Error/Error";
 
 function LoginPage() {
   const [emailLogin, setEmailLogin] = useState("");
@@ -35,7 +36,7 @@ function LoginPage() {
       password: passwordRegister,
     };
 
-    authService.register(payload);
+    await dispatch(registerUser(payload));
   };
 
   const handleLogout = async (e) => {
@@ -44,9 +45,12 @@ function LoginPage() {
     authService.logout();
   };
 
+  const errorMessage = userInfo?.error || "";
+
   return (
     <section>
       <code>{JSON.stringify(userInfo)}</code>
+      {errorMessage.length > 0 && <Error message={errorMessage}></Error>}
       <form onSubmit={handleLoginSubmit}>
         <h2>Login</h2>
         <label>

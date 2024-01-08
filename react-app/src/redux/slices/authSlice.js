@@ -18,12 +18,23 @@ const initialState = {
 };
 
 export const loginUser = createAsyncThunk("auth/login", async (payload) => {
-  const data = await authService.login(payload);
+  const { data } = await authService.login(payload);
 
   localStorage.setItem("token", data.accessToken);
 
   return data;
 });
+
+export const registerUser = createAsyncThunk(
+  "auth/register",
+  async (payload) => {
+    const { data } = await authService.register(payload);
+
+    localStorage.setItem("token", data.accessToken);
+
+    return data;
+  }
+);
 
 const authSlice = createSlice({
   name: "auth",
@@ -48,7 +59,28 @@ const authSlice = createSlice({
         state.status = "failed";
         state.loading = false;
         state.isAuthenticated = false;
-        state.error = action.payload;
+        state.error = action.error.message;
+      })
+      .addCase(registerUser.pending, (state, action) => {
+        state.status = "loading";
+        state.loading = true;
+        state.error = null;
+        state.isAuthenticated = false;
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.loading = false;
+        state.isAuthenticated = true;
+        state.email = action.payload.user.email;
+        state.userToken = action.payload.accessToken;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.status = "failed";
+        state.loading = false;
+        state.isAuthenticated = false;
+        console.dir(action);
+        console.error(action.error.message);
+        state.error = action.error.message;
       });
   },
 });
