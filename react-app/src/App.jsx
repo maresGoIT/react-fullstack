@@ -18,6 +18,8 @@ const FacultyHistory = lazy(() =>
   import("./pages/faculties/faculty/components/FacultyHistory")
 );
 
+const LoginPage = lazy(() => import("./pages/login/LoginPage"));
+
 // import FacultiesPage from "./pages/faculties/FacultiesPage";
 // import FacultyPage from "./pages/faculties/faculty/FacultyPage";
 // import FacultyDescription from "./pages/faculties/faculty/components/FacultyDescription";
@@ -28,6 +30,7 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<SharedLayout />}>
+          <Route path="login" element={<LoginPage />} />
           <Route index element={<UniversitiesPage />}></Route>
           <Route path="faculties" element={<FacultiesPage />} />
           <Route path="faculties/:id" element={<FacultyPage />}>

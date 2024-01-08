@@ -55,5 +55,17 @@
       "description": "Faculty descr",
       "history": "What a rich history"
     }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "email": "test@test.com",
+      "password": "bestPassw0rd"
+    },
+    {
+      "email": "mares@test.com",
+      "password": "$2a$10$dZMdV84palwuBuA/8Mz7suVoyzjVdeEhAD4B21A4UtXTe2YWI0O.m",
+      "id": 2
+    }
   ]
 }

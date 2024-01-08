@@ -23,7 +23,13 @@ Create a db.json file with some data
 ### Start JSON Server
 
 ```
+Without auth:
 json-server --watch -p 3001 db.json
+
+// With auth middleware:
+json-server --watch -p 3001 db.json -m ./node_modules/json-server-auth
+
+
 ```
 
 Now if you go to http://localhost:3001/tutors/1, you'll get

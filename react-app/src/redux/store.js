@@ -4,6 +4,7 @@ import { facultiesSearchTermReducer } from "./slices/facultiesSearchTermSlice";
 import { citiesReducer } from "./slices/citiesSlice";
 import { tutorsReducer } from "./slices/tutorsSlice";
 import { tutorsFilterReducer } from "./slices/tutorsFilterSlice";
+import { authReducer } from "./slices/authSlice";
 
 // In store, pentru fiecare "particica" din state-ul aplicatie, o sa asignam un reducer, care se va ocupa exclusiv de
 // logica pentru acea particica
@@ -18,6 +19,7 @@ OBIECTUL DE STATE VA FI:
 */
 const store = configureStore({
   reducer: {
+    auth: authReducer,
     cities: citiesReducer,
     faculties: facultiesReducer,
     facultiesSearchTerm: facultiesSearchTermReducer,

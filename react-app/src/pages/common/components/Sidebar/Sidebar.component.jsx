@@ -16,6 +16,11 @@ const Sidebar = () => {
       icon: <HiBookOpen />,
       path: "/faculties",
     },
+    {
+      id: "3",
+      name: "Login",
+      path: "/login",
+    },
   ];
 
   return (

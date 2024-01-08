@@ -1,7 +1,7 @@
 import axios from "axios";
+import setAxiosDefaults from "./config";
 
-axios.defaults.baseURL = "http://hn.algolia.com/api/v13/";
-
+setAxiosDefaults();
 async function retrieveArticles() {
   const response = await axios.get("/search?query=react");
 

@@ -1,7 +1,7 @@
 import axios from "axios";
+import setAxiosDefaults from "./config";
 
-axios.defaults.baseURL = "http://localhost:3001/";
-
+setAxiosDefaults();
 async function get() {
   const response = await axios.get("/tutors");
 

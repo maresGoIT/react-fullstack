@@ -4,6 +4,7 @@ export const selectTutorsFilter = (state) => state.tutorsFilter.value;
 export const selectTutors = (state) => state.tutors.items;
 export const selectTutorsStatus = (state) => state.tutors.status;
 export const selectTutorsError = (state) => state.tutors.error;
+export const selectUser = (state) => state.auth;
 
 // export const selectFilteredTutors = (state) => {
 //   const list = selectTutors(state);
