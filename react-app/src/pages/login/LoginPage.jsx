@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import authService from "../common/service/authService";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser, registerUser } from "../../redux/slices/authSlice";
+import {
+  loginUser,
+  registerUser,
+  logoutUser,
+} from "../../redux/slices/authSlice";
 import { selectUser } from "../../redux/selectors";
 import Error from "../common/components/Error/Error";
 
@@ -41,7 +45,7 @@ function LoginPage() {
 
   const handleLogout = async (e) => {
     e.preventDefault();
-
+    await dispatch(logoutUser());
     authService.logout();
   };
 

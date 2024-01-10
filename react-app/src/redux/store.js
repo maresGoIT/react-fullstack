@@ -1,4 +1,7 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import { persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
+
 import { facultiesReducer } from "./slices/facultiesSlice";
 import { facultiesSearchTermReducer } from "./slices/facultiesSearchTermSlice";
 import { citiesReducer } from "./slices/citiesSlice";
@@ -17,15 +20,26 @@ OBIECTUL DE STATE VA FI:
   tutors: [...lista de tutori],
 }
 */
+
+const reducers = combineReducers({
+  auth: authReducer,
+  cities: citiesReducer,
+  faculties: facultiesReducer,
+  facultiesSearchTerm: facultiesSearchTermReducer,
+  tutors: tutorsReducer,
+  tutorsFilter: tutorsFilterReducer,
+});
+
+const persistConfig = {
+  key: "root",
+  storage,
+  whitelist: ["auth"],
+};
+
+const persistedReducer = persistReducer(persistConfig, reducers);
+
 const store = configureStore({
-  reducer: {
-    auth: authReducer,
-    cities: citiesReducer,
-    faculties: facultiesReducer,
-    facultiesSearchTerm: facultiesSearchTermReducer,
-    tutors: tutorsReducer,
-    tutorsFilter: tutorsFilterReducer,
-  },
+  reducer: persistedReducer,
 });
 
 export default store;

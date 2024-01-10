@@ -5,6 +5,7 @@ export const selectTutors = (state) => state.tutors.items;
 export const selectTutorsStatus = (state) => state.tutors.status;
 export const selectTutorsError = (state) => state.tutors.error;
 export const selectUser = (state) => state.auth;
+export const selectIsAuthenticated = (state) => state.auth.isAuthenticated;
 
 // export const selectFilteredTutors = (state) => {
 //   const list = selectTutors(state);

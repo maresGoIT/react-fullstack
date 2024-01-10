@@ -6,6 +6,7 @@ import UniversitiesPage from "./pages/universities/UniversitiesPage";
 import NotFoundPage from "./pages/NotFoundPage";
 
 import "./App.css";
+import ProtectedRoute from "./pages/common/router/ProtectedRoute";
 
 // Importurile cu lazy (dinamice), trebuie sa fie dupa cele normale
 
@@ -32,7 +33,14 @@ const App = () => {
         <Route path="/" element={<SharedLayout />}>
           <Route path="login" element={<LoginPage />} />
           <Route index element={<UniversitiesPage />}></Route>
-          <Route path="faculties" element={<FacultiesPage />} />
+          <Route
+            path="faculties"
+            element={
+              <ProtectedRoute>
+                <FacultiesPage />
+              </ProtectedRoute>
+            }
+          />
           <Route path="faculties/:id" element={<FacultyPage />}>
             <Route index element={<FacultyDescription />} />
             <Route path="description" element={<FacultyDescription />} />
