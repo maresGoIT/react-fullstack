@@ -1,5 +1,5 @@
 import Container from './Container';
-import Menu from './Menu';
+import Menu from './Menu/Menu';
 
 export function AppOld() {
   const isVisible = true;
