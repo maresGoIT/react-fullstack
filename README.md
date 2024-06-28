@@ -1,6 +1,6 @@
 # react-fullstack
 
-React Fullstack #3 2023
+GOIt React Fullstack 2024
 
 ## Branch/Lectie
 
