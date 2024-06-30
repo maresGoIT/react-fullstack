@@ -19,15 +19,15 @@ Adaugă un handler pentru buton
 
 Când se face clic pe "Adaugă tutore", arată sau ascunde formularul pentru adăugarea unui tutore
 
-![tutorForm](https://github.com/maresGoIT/react-fullstack/blob/lesson-2/images/tutorForm.png?raw=true)
+![tutorForm](https://raw.githubusercontent.com/maresGoIT/react-fullstack/fson6-lectia-3/images/tutorForm.png?raw=true)
 
 Când se face clic pe "Adaugă oraș", arată sau ascunde formularul pentru adăugarea unui oraș
 
-![cityForm](https://github.com/maresGoIT/react-fullstack/blob/lesson-2/images/cityForm.png?raw=true)
+![cityForm](https://raw.githubusercontent.com/maresGoIT/react-fullstack/fson6-lectia-3/images/cityForm.png?raw=true)
 
 Când se face clic pe "Adaugă facultate", arată sau ascunde formularul pentru adăugarea unei facultăți
 
-![cityForm](https://github.com/maresGoIT/react-fullstack/blob/lesson-2/images/departmentForm.png?raw=true)
+![cityForm](https://raw.githubusercontent.com/maresGoIT/react-fullstack/fson6-lectia-3/images/departmentForm.png?raw=true)
 
 Folosește starea în clase
 
@@ -35,7 +35,7 @@ Folosește starea în clase
 
 Atașează un handler pe ... și arată o listă de operații "Șterge" "Editează"
 
-![dropdown](https://github.com/maresGoIT/react-fullstack/blob/lesson-2/images/dropdown.png?raw=true)
+![dropdown](https://raw.githubusercontent.com/maresGoIT/react-fullstack/fson6-lectia-3/images/dropdown.png?raw=true)
 
 Folosește starea în clase
 
@@ -43,4 +43,4 @@ Folosește starea în clase
 
 Realizează eliminarea facultății și orașului când se face clic pe "Șterge"
 
-![dropdown](https://github.com/maresGoIT/react-fullstack/blob/lesson-2/images/dropdown.png?raw=true)
+![dropdown](https://raw.githubusercontent.com/maresGoIT/react-fullstack/fson6-lectia-3/images/dropdown.png?raw=true)
