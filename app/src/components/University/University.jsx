@@ -7,18 +7,25 @@ import styles from './University.module.css';
 function University() {
   const imagePath = '/images/School@2x 1.png';
 
-  console.log(styles);
   return (
     <div className={styles.university}>
       <div className={styles.info}>
         <Paper>
           {/* <img src={schoolImage} alt="School" /> */}
-          <img className={styles.universityIcon} src={`${process.env.PUBLIC_URL}${imagePath}`} alt="School" />
+          <img
+            className={styles.universityIcon}
+            src={`${process.env.PUBLIC_URL}${imagePath}`}
+            alt="School"
+          />
           <p>university</p>
           <h2 className={styles.title}>MIT</h2>
           <div className={styles.controls}>
-            <button className='button-icon'><HiPencilAlt /></button>
-            <button className='button-icon'><HiTrash /></button>
+            <button className="button-icon">
+              <HiPencilAlt />
+            </button>
+            <button className="button-icon">
+              <HiTrash />
+            </button>
           </div>
         </Paper>
       </div>
