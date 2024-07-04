@@ -2,3 +2,10 @@
   background: white;
   padding: 16px;
 }
+
+.form {
+  display: flex;
+  gap: 16px;
+  flex-direction: column;
+  max-width: 600px;
+}

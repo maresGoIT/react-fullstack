@@ -1,8 +1,6 @@
 import Sidebar from './Sidebar';
 import Tutors from './Tutors';
 import University from './University/University';
-import data from "../utils/data.json";
-import UniversityClass from './University/UniversityClass';
 
 function App() {
   return (
@@ -11,9 +9,7 @@ function App() {
       <main className='main'>
         <h1 className='page-title'>University Information</h1>
         <University />
-        <UniversityClass />
-        <h2 style={{ marginTop: "64px"}}>Tutors</h2>
-        <Tutors tutors={data.tutors} />
+        <Tutors />
       </main>
     </div>
   );
