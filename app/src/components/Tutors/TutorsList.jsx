@@ -18,7 +18,7 @@ const INITIAL_FORM_STATE = {
 const INITIAL_STATE = {
   tutors: data.tutors,
   searchTerm: '',
-  isFormVisible: true,
+  isFormVisible: false,
   newTutor: { ...INITIAL_FORM_STATE },
 };
 
@@ -37,11 +37,8 @@ class TutorsList extends Component {
     return items.map(item => <Tutor key={item.phone} item={item} />);
   }
 
-  toggleForm() {
-    this.setState(state => ({
-      isFormVisible: !state.isFormVisible,
-      ...state,
-    }));
+  toggleForm = () => {
+    this.setState({isFormVisible: !this.state.isFormVisible})
   }
 
   handleChange = evt => {
@@ -66,7 +63,7 @@ class TutorsList extends Component {
     });
   };
 
-  getTutorsCount = (tutors) => {
+  getTutorsCount = tutors => {
     return tutors.length;
   };
 
@@ -74,8 +71,10 @@ class TutorsList extends Component {
     const filteredTutorsList = this.state.tutors.filter(tutor => {
       const searchTerm = this.state.searchTerm;
 
-      return tutor.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-             tutor.lastName.toLowerCase().includes(searchTerm.toLowerCase())
+      return (
+        tutor.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        tutor.lastName.toLowerCase().includes(searchTerm.toLowerCase())
+      );
     });
 
     return (
@@ -91,7 +90,9 @@ class TutorsList extends Component {
         />
         <div className={styles.list}>
           {this.renderList(filteredTutorsList)}
-          <p>Number of tutors found {this.getTutorsCount(filteredTutorsList)}</p>
+          <p>
+            Number of tutors found {this.getTutorsCount(filteredTutorsList)}
+          </p>
           <p>Number of tutors {this.getTutorsCount(this.state.tutors)} </p>
         </div>
 
@@ -101,66 +102,59 @@ class TutorsList extends Component {
             <Input
               label="Surname"
               name="firstName"
+              type="text"
               value={this.state.newTutor.firstName}
               handleChange={this.handleChange}
               required={true}
             />
 
-            <label>
-              <span>Name</span>
-              <input
-                name="lastName"
-                type="text"
-                value={this.state.newTutor.lastName}
-                onChange={this.handleChange}
-                required
-              />
-            </label>
+            <Input
+              label="Name"
+              name="lastName"
+              type="text"
+              value={this.state.newTutor.lastName}
+              handleChange={this.handleChange}
+              required={true}
+            />
 
-            <label>
-              <span>Phone Number</span>
-              <input
-                name="phone"
-                type="tel"
-                pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-                title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-                value={this.state.newTutor.phone}
-                onChange={this.handleChange}
-                required
-              />
-            </label>
+            <Input
+              label="Phone"
+              name="phone"
+              type="tel"
+              value={this.state.newTutor.phone}
+              handleChange={this.handleChange}
+              required={true}
+            />
 
-            <label>
-              <span>Email</span>
-              <input
-                name="email"
-                type="email"
-                value={this.state.newTutor.email}
-                onChange={this.handleChange}
-                required
-              />
-            </label>
+            <Input
+              label="Email"
+              name="email"
+              type="email"
+              value={this.state.newTutor.email}
+              handleChange={this.handleChange}
+              required={true}
+            />
 
-            <label>
-              <span>City</span>
-              <input
-                name="city"
-                type="text"
-                value={this.state.newTutor.city}
-                onChange={this.handleChange}
-                required
-              />
-            </label>
+            <Input
+              label="City"
+              name="city"
+              type="text"
+              value={this.state.newTutor.city}
+              handleChange={this.handleChange}
+              required={true}
+            />
 
             <Button type="submit" handleClick={() => {}}>
               Invite
             </Button>
           </form>
         )}
+
         <Button handleClick={this.toggleForm}>
           <FaPlusCircle />
           Add Tutor
         </Button>
+
       </section>
     );
   }
