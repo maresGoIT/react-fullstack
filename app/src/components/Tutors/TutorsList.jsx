@@ -4,7 +4,6 @@ import Button from 'components/Button';
 import { Component } from 'react';
 import { FaPlusCircle } from 'react-icons/fa';
 import styles from './TutorsList.module.css';
-import data from '../../utils/data.json';
 import Input from 'components/common/Input/Input';
 
 const INITIAL_FORM_STATE = {
@@ -16,7 +15,7 @@ const INITIAL_FORM_STATE = {
 };
 
 const INITIAL_STATE = {
-  tutors: data.tutors,
+  tutors: [],
   searchTerm: '',
   isFormVisible: false,
   newTutor: { ...INITIAL_FORM_STATE },
@@ -31,6 +30,12 @@ class TutorsList extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.getTutorsCount = this.getTutorsCount.bind(this);
+  }
+
+  componentDidMount() {
+    const data = JSON.parse(localStorage.getItem('tutors'));
+
+    this.setState({tutors: data})
   }
 
   renderList(items) {

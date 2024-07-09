@@ -16,6 +16,14 @@ class Sidebar extends Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
+  componentDidMount() {
+    setTimeout(() => console.log('Am inceput numaratoarea', 1000))
+  }
+  
+  componentWillUnmount() {
+    clearTimeout();
+  }
+
   menuConfig = [
     {
       icon: <HiBookOpen />,
