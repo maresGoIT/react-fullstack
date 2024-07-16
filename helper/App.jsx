@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 
 class Modal extends React.Component {
@@ -41,7 +41,7 @@ class Modal extends React.Component {
   }
 }
 
-class App extends React.Component {
+class App extends Component {
   state = {
     isModalOpen: false,
   };

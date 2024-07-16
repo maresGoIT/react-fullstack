@@ -19,6 +19,14 @@
       "city": "Madrid",
       "options": "Group creation, editing teacher profiles",
       "role": "member"
+    },
+    {
+      "lastName": "Ion",
+      "firstName": "Test",
+      "email": "test@test.com",
+      "phone": "123456",
+      "city": "Test",
+      "id": 3
     }
   ],
   "cities": [
