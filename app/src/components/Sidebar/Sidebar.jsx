@@ -1,14 +1,15 @@
 import Menu from '../Menu';
 import { HiBookOpen, HiAcademicCap } from 'react-icons/hi';
 import './Sidebar.css';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import SidebarToggle from './SidebarToggle/SidebarToggle';
 import { clsx } from 'clsx';
 
 import React from 'react'
+import useToggle from 'hooks/useToggle';
 
 export default function Sidebar(props) {
-  const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
+  const [isSidebarExpanded, handleClick] = useToggle(true);
 
   const menuConfig = [
     {
@@ -29,15 +30,13 @@ export default function Sidebar(props) {
     }
   }, [])
 
-  function handleClick() {
-    setIsSidebarExpanded(!isSidebarExpanded);
-  }
 
   return (
     <aside className={clsx("sidebar", !isSidebarExpanded && "sidebar--collapsed")}>
       <SidebarToggle handleClick={handleClick} isExpanded={isSidebarExpanded} />
 
       {isSidebarExpanded && (
+
         <>
           <div className="sidebar-brand"></div>
           <Menu items={menuConfig} />

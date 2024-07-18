@@ -8,6 +8,8 @@ import Input from 'components/common/Input/Input';
 import axios from 'axios';
 import Loading from 'components/common/Loading';
 import Alert from 'components/common/Alert';
+import useToggle from 'hooks/useToggle';
+import { useDebounce } from "@uidotdev/usehooks";
 
 axios.defaults.baseURL = 'http://localhost:3001';
 
@@ -24,7 +26,9 @@ export default function TutorsList(props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [isFormVisible, setIsFormVisible] = useState(false);
+  const debouncedSearchTerm = useDebounce(searchTerm, 1000);
+
+  const [isFormVisible, toggleForm] = useToggle(false);
   const [formData, setFormData] = useState({ ...INITIAL_FORM_STATE });
 
   useEffect(() => {
@@ -45,10 +49,6 @@ export default function TutorsList(props) {
     console.log('Aici');
     fetchData();
   }, []);
-
-  function toggleForm () {
-    setIsFormVisible(!isFormVisible);
-  };
 
   function renderList(items) {
     return items.map(item => (
@@ -104,8 +104,8 @@ export default function TutorsList(props) {
 
   const filteredTutorsList = tutors.filter(tutor => {
     return (
-      tutor.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      tutor.lastName.toLowerCase().includes(searchTerm.toLowerCase())
+      tutor.firstName.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+      tutor.lastName.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
     );
   });
 
